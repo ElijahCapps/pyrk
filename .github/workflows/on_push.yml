@@ -13,14 +13,12 @@ permissions:
 
 jobs:
     job-1:
-        setup-container-first:
-            runs-on: ubuntu-latest
-            container:
-                image: python:2.7.16
+        runs-on: ubuntu-latest
+        container:
+            image: python:2.7.16
         uses: ./.github/workflows/run_tests.yml
     job-2:
-        setup-container-second:
-            runs-on: ubuntu-latest
-            container:
-                image: python:3.10.13
+        runs-on: ubuntu-latest
+        container:
+            image: python:3.10.13
         uses: ./.github/workflows/run_tests.yml
