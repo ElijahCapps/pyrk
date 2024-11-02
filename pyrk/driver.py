@@ -233,11 +233,17 @@ def load_infile(infile_path):
     return infile
 
 
-def main(args, curr_dir):
-    np.set_printoptions(precision=5, threshold=np.inf)
+def load_args(args):
+    """Loads the arguments supplied, either through running as a module
+    or running as a script.
+    
+    :param args: String of arguments to parse through
+    :type args: string
+    """
     logger.set_up_pyrklog(args.logfile)
     infile = load_infile(args.infile)
     out_db = database.Database(filepath=args.outfile)
+    
     if not hasattr(infile, 'n_ref'):
         n_ref = 0
     else:
@@ -255,9 +261,24 @@ def main(args, curr_dir):
                           plotdir=args.plotdir,
                           infile=args.infile,
                           db=out_db)
+    return si, infile, out_db
+
+
+def main(args, curr_dir, user_si=None):
+    np.set_printoptions(precision=5, threshold=np.inf)
+    
+    if user_si != None:
+        si = user_si[0]
+        infile = user_si[1]
+        out_db = user_si[2]
+    else:
+        loaded_args = load_args(args)
+        infile = loaded_args[1]
+        out_db = loaded_args[2]
+    
     # TODO: think about weather to add n_ref to all input files, or put n_ref
     # in database files
-    print_logo(curr_dir)
+    # print_logo(curr_dir)
     sol = solve(si=si, y=si.y, infile=infile)
     log_results(si)
     out_db.close_db()

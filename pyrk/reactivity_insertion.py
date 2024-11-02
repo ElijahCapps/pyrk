@@ -31,6 +31,20 @@ class ReactivityInsertion(object):
         return self.vals[t_idx]
 
 
+class UserReactivityInsertion(object):
+    """Separate class for outside user-input reactivity insertions. This 
+    class can be modified during runtime by an outside script to insert 
+    arbitrary reactivities.
+    
+    :param user_rho: The user-input reactivity insertion.
+    :type user_rho: float, units of delta_k
+    """
+    
+    def __init__(self,
+                 user_rho=0 * units.delta_k):
+        self.user_rho = user_rho.to('delta_k')
+
+
 class StepReactivityInsertion(ReactivityInsertion):
     """
     Returns a Heaviside step function::
