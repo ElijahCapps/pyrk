@@ -5,6 +5,7 @@ from pyrk.inp import validation as v
 from pyrk.data import precursors as pr
 from pyrk.data import decay_heat as dh
 from pyrk.reactivity_insertion import ReactivityInsertion
+from pyrk.reactivity_insertion import UserReactivityInsertion
 from pyrk.timer import Timer
 
 
@@ -18,6 +19,7 @@ class Neutronics(object):
                  n_fic=0,
                  timer=Timer(),
                  rho_ext=None,
+                 rho_user=UserReactivityInsertion(),
                  feedback=False):
         """
         Creates a Neutronics object that holds the neutronics simulation
@@ -31,9 +33,11 @@ class Neutronics(object):
         :type n_precursors: int.
         :param n_decay: The number of decay heat groups. 11 is supported.
         :type n_decay: int.
-        :param n_fic: number of fictitious neutron groups for 'two-point'
+        :param n_fic: Number of fictitious neutron groups for 'two-point'
         point kinetics
         :type n_fic: int
+        :param rho_user: User-defined variable external reactivity insertion.
+        :type rho_user: float.
         :param rho_ext: External reactivity, a function of time
         :type rho_ext: function
         :returns: A Neutronics object that holds neutronics simulation info
@@ -71,6 +75,10 @@ class Neutronics(object):
         self._rho_ext = self.init_rho_ext(rho_ext).reactivity
         """_rho_ext (ReactivityInsertion): Reactivity function from the
         reactivity insertion model"""
+        
+        self._rho_user = rho_user
+        """_rho_user (float): User-defined, variable external reactivity
+        insertion"""
 
         self.feedback = feedback
         """feedback (bool): False if no reactivity feedbacks, true otherwise"""
@@ -149,7 +157,8 @@ class Neutronics(object):
         if self.feedback and t_idx > self._timer.t_idx_feedback:
             for component in components:
                 rho[component.name] = component.temp_reactivity(t_idx)
-        rho["external"] = self._rho_ext(t_idx=t_idx).to('delta_k')
+        rho["external_function"] = self._rho_ext(t_idx=t_idx).to('delta_k')
+        rho["external_user"] = self._rho_user.user_rho.to('delta_k')
         to_ret = sum(rho.values()).magnitude
         self._rho[t_idx] = to_ret
         return to_ret

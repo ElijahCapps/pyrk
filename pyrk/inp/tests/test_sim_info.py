@@ -7,16 +7,13 @@ from pyrk.db import database
 from pyrk.utilities.ur import units
 from pyrk import th_component
 from pyrk.timer import Timer
-
-
-@pytest.fixture
-def setup_func():
+    
+@pytest.fixture(autouse=True)
+def resource():
     "set up test fixtures"
     file = open('testfile.py', 'w+')
     file.close()
-    
-@pytest.fixture
-def teardown_func():
+    yield file
     "tear down test fixtures"
     os.remove('testfile.py')
 

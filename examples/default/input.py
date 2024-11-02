@@ -42,7 +42,7 @@ core_outer_radius = 1.25 * units.meter  #
 t0 = 0.00 * units.seconds
 
 # Timestep
-dt = 0.005 * units.seconds
+dt = 0.1 * units.seconds
 
 # Final Time
 tf = 5.0 * units.seconds
@@ -125,7 +125,7 @@ spectrum = "thermal"
 feedback = True
 
 # External Reactivity
-from reactivity_insertion import StepReactivityInsertion
+from pyrk.reactivity_insertion import StepReactivityInsertion
 rho_ext = StepReactivityInsertion(timer=ti, t_step=1.0 * units.seconds,
                                   rho_init=0.0 * units.delta_k,
                                   rho_final=0.005 * units.delta_k)
