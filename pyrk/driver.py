@@ -273,6 +273,7 @@ def main(args, curr_dir, user_si=None):
         out_db = user_si[2]
     else:
         loaded_args = load_args(args)
+        si = loaded_args[0]
         infile = loaded_args[1]
         out_db = loaded_args[2]
     

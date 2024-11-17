@@ -6,6 +6,7 @@ from pyrk import neutronics
 import pyrk.reactivity_insertion as ri
 from pyrk import th_system
 from pyrk.db import database
+from importlib.metadata import version
 
 
 class SimInfo(object):
@@ -153,9 +154,10 @@ class SimInfo(object):
     #     import subprocess
     #     return subprocess.check_output(['git', 'rev-parse', 'HEAD'])
 
-    # def get_git_revision_short_hash(self):
+    def get_git_revision_short_hash(self):
     #     import subprocess
     #     return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
+        return version('pyrk')
 
     def get_timestamp(self):
         # time since epoch, a float
@@ -187,8 +189,8 @@ class SimInfo(object):
         ts, st = self.get_timestamp()
         rec = {'simhash': self.generate_sim_id(),
                'timestamp': ts,
-                'humantime': st,
-                # 'revision': self.get_git_revision_short_hash(),
+               'humantime': st,
+               'revision': self.get_git_revision_short_hash(),
                'inputblob': self.get_input_blob(self.infile),
                't0': self.timer.t0.magnitude,
                'tf': self.timer.tf.magnitude,
