@@ -36,6 +36,7 @@ from __future__ import print_function
 __all__ = ["get_git_version"]
 
 from subprocess import Popen, PIPE
+from importlib.metadata import version
 import os
 
 path = os.path.abspath(os.path.dirname(__file__))
@@ -87,6 +88,11 @@ def get_git_version():
     # RELEASE-VERSION.
     if v is None:
         v = release_version
+
+    # If that doesn't work, try to get version with
+    # importlib.metadata
+    if v is None:
+        v = str.encode(version('pyrk'))
 
     # If we still don't have anything, that's an error.
     if v is None:
